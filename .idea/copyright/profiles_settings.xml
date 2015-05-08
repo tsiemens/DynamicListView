@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="" />
+  <settings default="Apache Trevor">
+    <module2copyright>
+      <element module="All" copyright="Apache Trevor" />
+    </module2copyright>
+  </settings>
 </component>
