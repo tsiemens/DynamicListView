@@ -29,13 +29,16 @@ import com.tsiemens.dynamiclistview.DynamicListView;
 
 import java.util.List;
 
-public abstract class MyListAdapter extends DynamicArrayAdapter<String> {
+public class MyListAdapter extends DynamicArrayAdapter<String> {
 
     private static final int LAYOUT = R.layout.row_layout;
+
     List<String> objects;
+    DynamicListView listView;
 
     public MyListAdapter(Context context, List<String> objects) {
         super(context, LAYOUT, objects);
+        this.objects = objects;
     }
 
     @Override
@@ -62,11 +65,33 @@ public abstract class MyListAdapter extends DynamicArrayAdapter<String> {
         holder.dragView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return onRowDragItemClick(position);
+                return onRowDragViewTouch(position);
             }
         });
 
         return row;
+    }
+
+    public void bindToListView(DynamicListView lv) {
+        listView = lv;
+        listView.setDynamicAdapter(this);
+    }
+
+    @Override
+    protected void doItemSwap(int pos1, int pos2) {
+        String o1 = objects.get(pos1);
+        String o2 = objects.get(pos2);
+        objects.set(pos1, o2);
+        objects.set(pos2, o1);
+    }
+
+    private boolean onRowDragViewTouch(int position) {
+        if (listView.canHoverRows()) {
+            // The row clicked is now placed above the other rows, and follows the touch position
+            listView.hoverRow(position);
+            return true;
+        }
+        return false;
     }
 
     private static class Holder {
@@ -74,5 +99,5 @@ public abstract class MyListAdapter extends DynamicArrayAdapter<String> {
         View dragView;
     }
 
-    protected abstract boolean onRowDragItemClick(int position);
+
 }

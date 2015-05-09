@@ -16,18 +16,15 @@
 
 package com.tsiemens.dynamiclistviewsample;
 
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.tsiemens.dynamiclistview.DynamicListView;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SampleActivity extends ActionBarActivity {
-
-    private DynamicListView listView;
+public class SampleActivity extends AppCompatActivity {
 
     private List<String> rowData = Arrays.asList("1", "2", "3", "4", "5");
 
@@ -36,33 +33,11 @@ public class SampleActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
-        listView = (DynamicListView) findViewById(R.id.dynamic_list_view);
-        listView.setDynamicAdapter(new CustomListAdapter(this, rowData));
-    }
+        DynamicListView listView = (DynamicListView) findViewById(R.id.dynamic_list_view);
+        MyListAdapter adapter = new MyListAdapter(this, rowData);
 
-    private class CustomListAdapter extends MyListAdapter {
-
-        public CustomListAdapter(Context context, List<String> objects) {
-            super(context, objects);
-            // Colors the background of the rows while being moved, so the cell looks opaque
-            fillTranslarentMobileRowBackground(android.R.color.white);
-        }
-
-        @Override
-        protected boolean onRowDragItemClick(int position) {
-            if (listView.canHoverRows()) {
-                listView.hoverRow(position);
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        protected void doItemSwap(int pos1, int pos2) {
-            String o1 = rowData.get(pos1);
-            String o2 = rowData.get(pos2);
-            rowData.set(pos1, o2);
-            rowData.set(pos2, o1);
-        }
+        // Colors transparent portions of the row while being dragged over other views.
+        adapter.fillTranslarentMobileRowBackground(getResources().getColor(android.R.color.white));
+        adapter.bindToListView(listView);
     }
 }
