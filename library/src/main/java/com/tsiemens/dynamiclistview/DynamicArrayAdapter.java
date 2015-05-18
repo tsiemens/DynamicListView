@@ -30,11 +30,16 @@ import java.util.List;
 public abstract class DynamicArrayAdapter<T> extends ArrayAdapter<T> {
 
     private ItemSwapListener swapListener;
+    private RowHoverListener hoverListener;
     private Integer backgroundColor = null;
 
     public interface ItemSwapListener {
-        public void onHoverEventFinished(DynamicListView.HoverEvent event);
         public void onItemsSwapped(int pos1, int pos2);
+    }
+
+    public interface RowHoverListener {
+        public void onHoverEventStarted(DynamicListView.HoverEvent event);
+        public void onHoverEventFinished(DynamicListView.HoverEvent event);
     }
 
     public DynamicArrayAdapter(Context context, int textViewResourceId, List<T> objects) {
@@ -53,6 +58,10 @@ public abstract class DynamicArrayAdapter<T> extends ArrayAdapter<T> {
         swapListener = listener;
     }
 
+    public void setOnRowHoverListener(RowHoverListener listener) {
+        hoverListener = listener;
+    }
+
     public void swapItems(int pos1, int pos2) {
         doItemSwap(pos1, pos2);
         if (swapListener != null) {
@@ -61,8 +70,14 @@ public abstract class DynamicArrayAdapter<T> extends ArrayAdapter<T> {
     }
 
     public void finishedHoverEvent(DynamicListView.HoverEvent event) {
-        if (swapListener != null) {
-            swapListener.onHoverEventFinished(event);
+        if (hoverListener != null) {
+            hoverListener.onHoverEventFinished(event);
+        }
+    }
+
+    public void startedHoverEvent(DynamicListView.HoverEvent event) {
+        if (hoverListener != null) {
+            hoverListener.onHoverEventStarted(event);
         }
     }
 

@@ -357,6 +357,8 @@ public class DynamicListView extends ListView {
             }
         } else if (newHoverIndex != INVALID_INDEX) {
             currentHoverEvent = new HoverEvent(newHoverIndex);
+            DynamicArrayAdapter adapter = (DynamicArrayAdapter) getAdapter();
+            adapter.startedHoverEvent(currentHoverEvent);
         }
     }
 
